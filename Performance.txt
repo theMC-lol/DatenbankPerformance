@@ -1,0 +1,149 @@
+-- clear schmema before running the script
+drop schema if exists warehouse;
+create schema warehouse;
+
+-- use schema warehouse to to perform subsequent statements on that schema
+use warehouse;
+
+-- prefices before variables to find the right things faster
+-- table (primary) id always on first place to have a common look
+
+-- product category table
+create table category(
+	cat_id			integer not null auto_increment,
+	cat_name 		varchar(50),
+	
+	-- keys
+	primary key 	(cat_id)
+);
+
+-- product table
+create table product(
+	pro_id				integer not null auto_increment,
+	pro_name			varchar(50),
+	pro_price			float,
+	pro_category_id		integer not null,
+	
+	-- keys
+	primary key 		(pro_id),
+	foreign key 		(pro_category_id) references category (cat_id)
+);
+
+--  customer table
+create table customer(
+	cus_id		integer not null auto_increment,
+	cus_email	varchar(50),
+	
+	-- keys
+	primary key (cus_id)
+);
+
+-- product state table
+create table state(
+	sta_id			integer not null auto_increment,
+	sta_description	varchar(50),
+	
+	-- keys
+	primary key 	(sta_id)
+);
+-- customer history  table
+create table history(
+	his_id			integer not null auto_increment,
+	his_customer_id integer,
+	his_product_id 	integer,
+	his_timestamp	datetime,
+	his_state_id	integer,
+	
+	-- keys	
+	primary key (his_id),
+	foreign key (his_customer_id) references customer (cus_id),
+	foreign key (his_product_id) references product (pro_id),
+	foreign key (his_state_id) references state (sta_id)
+);
+
+-- insert data in each table to be potent to create test sceneries
+
+-- given categories for tabel category
+insert into category (cat_name) values
+("Haushaltswaren"),
+("Tiernahrung"),
+("Büromaterial"),
+("Gaming"),
+("Sport");
+
+-- sample products
+insert into product (pro_name, pro_price, pro_category_id) values
+("Staubsauger", 299.99, 1),
+("Besen", 4.99, 1),
+("Abflussreiniger", 1.99, 1),
+("Handtücher 3x", 7.99, 1),
+("Vogelfutter", 12.99, 2),
+("Hundefutter", 10.99, 2),
+("Katzenfutter", 9.99, 2),
+("Meerschweinchenfutter", 19.99, 2),
+("Tacker", 2.99, 3),
+("Drucker", 129.99, 3),
+("Brüostuhl", 299.99, 3),
+("Monitor 4k", 399.99, 3),
+("Gaming-Mousepad", 20.99, 4),
+("Gaming-Tastatur", 129.99, 4),
+("Gaming-Maus", 59.99, 4),
+("Gaming-Computer", 1299.99, 4),
+("Black-Roll", 19.99, 5),
+("Yoga-Matte", 5.99, 5),
+("Trinkflasche", 2.99, 5),
+("Laufschuhe", 129.99, 5);
+
+-- sample customers
+insert into customer (cus_email) values
+("felix@dhbw-stuttgart.de"),
+("daniel@dhbw-stuttgart.de"),
+("marko@dhbw-stuttgart.de"),
+("sebastian@dhbw-stuttgart.de"),
+("annika@dhbw-stuttgart.de");
+
+-- implement the (current) two states [watched; bought]
+insert into state (sta_description) values
+("Watched"),
+("Bought");
+
+-- implementing history. buying a product implements having been watching it
+-- differentation to be done by comparing timestamps
+insert into history (his_customer_id, his_product_id, his_timestamp, his_state_id) values
+-- Felix cant decide to buy a new gaming-pc
+(1 , 16 , "2020-06-01 21:21:04", 1),
+(1 , 16 , "2020-06-02 23:43:01", 1),
+(1 , 16 , "2020-06-03 20:48:58", 1),
+(1 , 16 , "2020-06-04 23:43:12", 1),
+(1 , 16 , "2020-06-05 12:45:56", 1),
+(1 , 16 , "2020-06-05 12:48:03", 2),
+-- Daniel buys everything he sees
+(2 , 4 , "2020-06-01 09:00:03", 1),
+(2 , 4 , "2020-06-01 09:02:10", 2),
+(2 , 18 , "2020-06-01 09:08:23", 1),
+(2 , 18 , "2020-06-01 09:09:54", 2),
+(2 , 11 , "2020-06-01 09:12:12", 1),
+(2 , 11 , "2020-06-01 09:13:59", 2),
+-- Marko tends to rummage in online shopping while home office
+(3 , 2 , "2020-06-01 11:30:35", 1),
+(3 , 5 , "2020-06-02 10:42:58", 1),
+(3 , 8 , "2020-06-03 11:00:21", 1),
+(3 , 4 , "2020-06-04 09:58:13", 1),
+(3 , 14 , "2020-06-05 12:01:45", 1),
+(3 , 19 , "2020-06-06 10:36:04", 1),
+-- Sebastian needs time to find the product he is looking for
+(4 , 4 , "2020-06-03 16:42:01", 1),
+(4 , 5 , "2020-06-03 16:43:05", 1),
+(4 , 6 , "2020-06-03 16:45:04", 1),
+(4 , 7 , "2020-06-03 16:45:58", 1),
+(4 , 4 , "2020-06-03 16:51:20", 1),
+(4 , 4 , "2020-06-03 16:51:58", 2),
+-- Annika knows what she wants and buys that when she needs it.
+(5 , 1 , "2020-06-01 16:31:46", 1),
+(5 , 1 , "2020-06-01 16:32:58", 2),
+(5 , 9 , "2020-06-04 08:59:00", 1),
+(5 , 9 , "2020-06-04 09:00:23", 2),
+(5 , 20 , "2020-06-06 12:33:43", 1),
+(5 , 20 , "2020-06-06 12:35:08", 2);
+
+
