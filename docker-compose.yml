@@ -1,0 +1,27 @@
+version: '3'
+services:
+    mentoring:
+        build: .
+        networks:
+            - default
+        links:
+            - db
+        depends_on: 
+            - db
+        environment: 
+            WAIT_HOSTS: db:3306
+            WAIT_HOSTS_TIMEOUT: 60
+    db:
+        image: mariadb:bionic
+        environment:
+            MYSQL_DATABASE: warehouse
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        ports:
+            - "8036:3306"
+        volumes:
+            - ./dump:/docker-entrypoint-initdb.d 
+            - persistent:/var/lib/mysql
+        networks:
+            - default
+volumes:
+    persistent:
