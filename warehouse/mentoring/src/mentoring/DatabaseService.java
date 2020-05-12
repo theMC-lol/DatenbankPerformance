@@ -64,6 +64,30 @@ public class DatabaseService {
 		return count;
 	}
 
+	public int countCustomerBoughtStored() throws SQLException {
+		final Statement stmt = con.createStatement();
+		ResultSet rs = null;
+		for(int i = 0; i < 100; i++) {
+			rs = stmt.executeQuery("CALL count_customer_bought");
+			resetCache();
+		}
+		final int count = rs.getMetaData().getColumnCount();
+		stmt.close();
+		return count;
+	}
+
+	public int countCustomerBoughtStoredNoIndex() throws SQLException {
+		final Statement stmt = con.createStatement();
+		ResultSet rs = null;
+		for(int i = 0; i < 100; i++) {
+			rs = stmt.executeQuery("CALL count_customer_bought_noindex");
+			resetCache();
+		}
+		final int count = rs.getMetaData().getColumnCount();
+		stmt.close();
+		return count;
+	}
+
 	public int countBoughtHaushaltswaren() throws SQLException {
 		final Statement stmt = con.createStatement();
 		ResultSet rs = null;

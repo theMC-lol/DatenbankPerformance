@@ -144,4 +144,18 @@ BEGIN
 	SELECT (SELECT count(*) AS watched FROM history h USE INDEX(), customer c USE INDEX() WHERE c.cus_id = h.his_customer_id AND c.cus_email LIKE mail AND h.his_state_id = 1) AS watched, (SELECT count(*) AS bought FROM history h USE INDEX(), customer c USE INDEX() WHERE c.cus_id = h.his_customer_id AND c.cus_email LIKE mail AND h.his_state_id = 2) AS bought;
 END$$
 
+DROP PROCEDURE IF EXISTS count_customer_bought$$
+
+CREATE PROCEDURE count_customer_bought()
+BEGIN
+	SELECT cus_email, count(*) FROM history, customer WHERE history.his_customer_id = customer.cus_id AND history.his_state_id = 1 GROUP BY cus_email HAVING count(*) > 2;
+END$$
+
+DROP PROCEDURE IF EXISTS count_customer_bought_noindex$$
+
+CREATE PROCEDURE count_customer_bought_noindex()
+BEGIN
+	SELECT cus_email, count(*) FROM history IGNORE INDEX(PRIMARY, his_customer_id, his_state_id), customer IGNORE INDEX(PRIMARY) WHERE history.his_customer_id = customer.cus_id AND history.his_state_id = 1 GROUP BY cus_email HAVING count(*) > 2;
+END$$
+
 DELIMITER ;

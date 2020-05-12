@@ -41,6 +41,24 @@ public class Main {
 
 		service.resetCache();
 
+		System.out.println("Amount of customers who watched more than 2 items (x100) (Stored):");
+		timeStart = System.currentTimeMillis();
+		count = service.countCustomerBoughtStored();
+		timeEnd = System.currentTimeMillis();
+		System.out.println(count);
+		System.out.println("Performance: " + (timeEnd - timeStart) + " Millisek.\n");
+
+		service.resetCache();
+		
+		System.out.println("Amount of customers who watched more than 2 items (x100) (Stored) (Using No Index):");
+		timeStart = System.currentTimeMillis();
+		count = service.countCustomerBoughtStoredNoIndex();
+		timeEnd = System.currentTimeMillis();
+		System.out.println(count);
+		System.out.println("Performance: " + (timeEnd - timeStart) + " Millisek.\n");
+
+		service.resetCache();
+
 		System.out.println("Amount of bought Haushaltswaren (x100):");
 		timeStart = System.currentTimeMillis();
 		count = service.countBoughtHaushaltswaren();
