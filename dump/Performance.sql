@@ -118,6 +118,7 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS count_bought_haushaltswaren$$
 
+-- Procedure für Anzahl gekaufter Haushaltswaren mit Index
 CREATE PROCEDURE count_bought_haushaltswaren()
 BEGIN
 	SELECT count(h.his_id) FROM product p, category c, history h WHERE p.pro_category_id = c.cat_id AND c.cat_name LIKE 'Haushaltswaren' AND p.pro_id = h.his_product_id;
@@ -125,6 +126,7 @@ END$$
 
 DROP PROCEDURE IF EXISTS count_bought_haushaltswaren_noindex$$
 
+-- Procedure für Anzahl gekaufter Haushaltswaren ohne Index
 CREATE PROCEDURE count_bought_haushaltswaren_noindex()
 BEGIN
 	SELECT count(h.his_id) FROM product p USE INDEX(), category c USE INDEX(), history h USE INDEX() WHERE p.pro_category_id = c.cat_id AND c.cat_name LIKE 'Haushaltswaren' AND p.pro_id = h.his_product_id;
@@ -132,6 +134,7 @@ END$$
 
 DROP PROCEDURE IF EXISTS watched_bought$$
 
+-- Procedure für Conversion-Rate
 CREATE PROCEDURE watched_bought(mail VARCHAR(50))
 BEGIN
 	SELECT (SELECT count(*) AS watched FROM history h, customer c WHERE c.cus_id = h.his_customer_id AND c.cus_email LIKE mail AND h.his_state_id = 1) AS watched, (SELECT count(*) AS bought FROM history h, customer c WHERE c.cus_id = h.his_customer_id AND c.cus_email LIKE mail AND h.his_state_id = 2) AS bought;
@@ -139,6 +142,7 @@ END$$
 
 DROP PROCEDURE IF EXISTS watched_bought_noindex$$
 
+-- Procedure für Conversion-Rate ohne Index
 CREATE PROCEDURE watched_bought_noindex(mail VARCHAR(50))
 BEGIN
 	SELECT (SELECT count(*) AS watched FROM history h USE INDEX(), customer c USE INDEX() WHERE c.cus_id = h.his_customer_id AND c.cus_email LIKE mail AND h.his_state_id = 1) AS watched, (SELECT count(*) AS bought FROM history h USE INDEX(), customer c USE INDEX() WHERE c.cus_id = h.his_customer_id AND c.cus_email LIKE mail AND h.his_state_id = 2) AS bought;
@@ -146,6 +150,7 @@ END$$
 
 DROP PROCEDURE IF EXISTS count_customer_bought$$
 
+-- Procedure für Anzahl der Kunden die mehr als 2 Items angeschaut haben mit Index 
 CREATE PROCEDURE count_customer_bought()
 BEGIN
 	SELECT cus_email, count(*) FROM history, customer WHERE history.his_customer_id = customer.cus_id AND history.his_state_id = 1 GROUP BY cus_email HAVING count(*) > 2;
@@ -153,6 +158,7 @@ END$$
 
 DROP PROCEDURE IF EXISTS count_customer_bought_noindex$$
 
+-- Procedure für Anzahl der Kunden die mehr als 2 Items angeschaut haben ohne Index 
 CREATE PROCEDURE count_customer_bought_noindex()
 BEGIN
 	SELECT cus_email, count(*) FROM history IGNORE INDEX(PRIMARY, his_customer_id, his_state_id), customer IGNORE INDEX(PRIMARY) WHERE history.his_customer_id = customer.cus_id AND history.his_state_id = 1 GROUP BY cus_email HAVING count(*) > 2;
