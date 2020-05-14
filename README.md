@@ -44,3 +44,7 @@ Die Implementation findet in der Klasse DatabaseService statt. Jede Variation be
 
 # Aufgabe 4 - Auswertung
 Die erhobenen Daten werden ausgewertet und mit Daten aus der Literatur verglichen. Also ob die Literatur unsere Ergebnisse wiederspiegelt. Unter Berücksichtigung der Vor- und Nachteile, welche die einzelnen Variationen mit sich bringen, wird für unseren Kunden eine Handlungsempfehlung ausgepsprochen. Es besteht die Möglichkeit, dass diese eine hybride Form ist.
+
+# Docker - Anbindung
+Das gesamte Projekt soll über Docker realisiert werden, sodass kein Xampp verwendet werden muss. 
+Die Laufzeitmessung erhält man dann in dem man sich über das Terminal in den Projektordner einwählt und die Docker-Container mithilfe des Befehls --> (docker-compose up --build) erstellt. Im Docker Dashboard sieht man anschließend Container die gestartet werden. Direkt nach der Container-Erstellung kann man sich die Laufzeitmessungen im Terminal, ansehen. Die Art des Programmieransatzes bzw. die Kombination lässt sich aus der Klammer direkt nach der Abfrage herauslesen. 
