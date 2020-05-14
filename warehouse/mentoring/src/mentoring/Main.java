@@ -12,26 +12,17 @@ public class Main {
 		// Ruft ein Objekt aus Klasse Databaseservice auf, um Funktionen durchzuführen
 		DatabaseService service = new DatabaseService();
 
-		System.out.println("berto@comp.de name (x1):");
-		long timeStart = System.currentTimeMillis();
-		String name = service.queryBertoBartName();
-		long timeEnd = System.currentTimeMillis();
-		System.out.println(name);
-		System.out.println("Performance / Query: " + (timeEnd - timeStart) + " Millisek.\n");
-
-
-		
 		service.resetCache(true); // Leert den Cache 
 		int count = 0;
 
 		// Zählt die Durchschnittszeit der Abfrage "Anzahl Kunden die mehr als 2 Items angeschaut haben" unter Verwendung vom Index
-		System.out.println("Amount of customers who watched more than 2 items (x100) (Using Index):");
-		timeStart = System.currentTimeMillis();
+		System.out.println("\n Amount of customers who watched more than 2 items (x100) (Using Index):");
+		long timeStart = System.currentTimeMillis();
 		for (int i = 0; i < 100; i++) {
 			count = service.countCustomerBought();
 			service.resetCache(true);
 		}
-		timeEnd = System.currentTimeMillis();
+		long timeEnd = System.currentTimeMillis();
 		System.out.println(count);
 		System.out.println("Performance / Query: " + (timeEnd - timeStart) / 100 + " Millisek.\n");
 

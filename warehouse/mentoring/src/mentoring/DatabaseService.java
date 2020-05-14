@@ -23,22 +23,6 @@ public class DatabaseService {
 		con.close();
 	}
 
-	public String queryBertoBartName() throws SQLException {
-		String name = "";
-
-		final Statement stmt = con.createStatement();
-
-		final ResultSet rs = stmt.executeQuery("SELECT pro_name FROM product where pro_id = 16");
-
-		rs.next();
-
-		name = rs.getString(1);
-
-		stmt.close();
-
-		return name;
-	}
-
 	// SQL Abfrage mit Index--> "Anzahl Kunden die mehr als 2 Items angeschaut haben" 
 	public int countCustomerBought() throws SQLException {
 		final Statement stmt = con.createStatement();
@@ -55,11 +39,13 @@ public class DatabaseService {
 		final Statement stmt = con.createStatement();
 		ResultSet rs = null;
 		rs = stmt.executeQuery(
-				"SELECT cus_email, count(*) FROM history IGNORE INDEX(PRIMARY, his_customer_id, his_state_id), customer IGNORE INDEX(PRIMARY) WHERE history.his_customer_id = customer.cus_id AND history.his_state_id = 1 GROUP BY cus_email HAVING count(*) > 2");
+				"SELECT cus_email, count(*) FROM history USE INDEX(), customer USE INDEX() WHERE history.his_customer_id = customer.cus_id AND history.his_state_id = 1 GROUP BY cus_email HAVING count(*) > 2");
 		final int count = rs.getMetaData().getColumnCount();
 		stmt.close();
 		return count;
 	}
+
+	//"SELECT cus_email, count(*) FROM history IGNORE INDEX(PRIMARY, his_customer_id, his_state_id), customer IGNORE INDEX(PRIMARY) WHERE history.his_customer_id = customer.cus_id AND history.his_state_id = 1 GROUP BY cus_email HAVING count(*) > 2");
 
 	// SQL Abfrage mit Index und Stored Procedure --> "Anzahl Kunden die mehr als 2 Items angeschaut haben" 
 	public int countCustomerBoughtStored() throws SQLException {
@@ -155,7 +141,7 @@ public class DatabaseService {
 		return result;
 	}
 
-	// SQL Abfrage mit Index und Stored Procedure --> "Conversion-Rate"
+	// SQL Abfrage mit Index und Stored Procedure --> "Conversion-Rate" 
 	public float getRatioOfWatchedBoughtStored(final String mail) throws SQLException {
 		final PreparedStatement stmt = con.prepareStatement("CALL watched_bought(?)");
 		stmt.setString(1, mail);
