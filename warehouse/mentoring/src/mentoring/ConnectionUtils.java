@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionUtils {
-
+	//Hier wird die Verbindung zur Maria-Datenbank aufgebaut (Port 3306).
 	public static Connection createNewConnection() throws SQLException {
 		String url = "jdbc:mariadb://localhost:3306/warehouse";
 		String url1 = "jdbc:mariadb://db:3306/warehouse";
