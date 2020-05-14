@@ -16,7 +16,7 @@ public class Main {
 		int count = 0;
 
 		// Zählt die Durchschnittszeit der Abfrage "Anzahl Kunden die mehr als 2 Items angeschaut haben" unter Verwendung vom Index
-		System.out.println("\n Amount of customers who watched more than 2 items (x100) (Using Index):");
+		System.out.println("\nAmount of customers who watched more than 2 items (x100) (Using Index):");
 		long timeStart = System.currentTimeMillis();
 		for (int i = 0; i < 100; i++) {
 			count = service.countCustomerBought();
